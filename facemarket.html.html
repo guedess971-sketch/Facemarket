@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 24.8.1.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.27in 11.69in; margin: 0.79in }
+		p { line-height: 115%; margin-bottom: 0.1in; background: transparent }
+		pre { background: transparent }
+		pre.western { font-family: "Liberation Mono", monospace; font-size: 10pt }
+		pre.cjk { font-family: "NSimSun", monospace; font-size: 10pt }
+		pre.ctl { font-family: "Liberation Mono", monospace; font-size: 10pt }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre class="western">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;pt-br&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;title&gt;FaceMarket&lt;/title&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+
+  &lt;!-- SUPABASE --&gt;
+  &lt;script src=&quot;https://unpkg.com/@supabase/supabase-js@2&quot;&gt;&lt;/script&gt;
+
+  &lt;style&gt;
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f2f4f8;
+    }
+
+    .login {
+      max-width: 360px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.1);
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #1ed760;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .link {
+      margin-top: 15px;
+      color: #0b1c2d;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .app {
+      display: none;
+    }
+
+    header {
+      background: #0b1c2d;
+      color: white;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .market {
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.08);
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #1ed760;
+    }
+
+    .logout {
+      background: #ff4d4d;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;!-- LOGIN --&gt;
+&lt;div class=&quot;login&quot; id=&quot;loginBox&quot;&gt;
+  &lt;h1&gt;FaceMarket&lt;/h1&gt;
+  &lt;p&gt;Acesse o marketplace&lt;/p&gt;
+
+  &lt;input id=&quot;email&quot; type=&quot;email&quot; placeholder=&quot;E-mail&quot; /&gt;
+  &lt;input id=&quot;senha&quot; type=&quot;password&quot; placeholder=&quot;Senha&quot; /&gt;
+
+  &lt;button onclick=&quot;entrar()&quot;&gt;Entrar&lt;/button&gt;
+  &lt;div class=&quot;link&quot; onclick=&quot;cadastrar()&quot;&gt;Criar conta&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- MARKETPLACE --&gt;
+&lt;div class=&quot;app&quot; id=&quot;app&quot;&gt;
+  &lt;header&gt;
+    FaceMarket
+    &lt;span class=&quot;logout&quot; onclick=&quot;sair()&quot;&gt;Sair&lt;/span&gt;
+  &lt;/header&gt;
+
+  &lt;div class=&quot;market&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;h3&gt;📱 Smartphone&lt;/h3&gt;
+      &lt;div class=&quot;price&quot;&gt;R$ 2.500&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;h3&gt;💻 Notebook&lt;/h3&gt;
+      &lt;div class=&quot;price&quot;&gt;R$ 3.900&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;h3&gt;🎧 Fone Bluetooth&lt;/h3&gt;
+      &lt;div class=&quot;price&quot;&gt;R$ 199&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  // 🔒 SUPABASE CONFIGURADO
+  const supabase = window.supabase.createClient(
+    &quot;https://ldackfpqgcphvplyeuaa.supabase.com&quot;,
+    &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkYWNrZnBxZ2NwaHZwbHlldWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MjIyNTAsImV4cCI6MjA4NTk5ODI1MH0.psy44Xw1TxKaK2ba22asQOGVpKZW9NMydzEqItxSYr8&quot;
+  );
+
+  async function entrar() {
+    const email = document.getElementById(&quot;email&quot;).value;
+    const senha = document.getElementById(&quot;senha&quot;).value;
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: senha
+    });
+
+    if (error) {
+      alert(&quot;Erro no login: &quot; + error.message);
+      return;
+    }
+
+    document.getElementById(&quot;loginBox&quot;).style.display = &quot;none&quot;;
+    document.getElementById(&quot;app&quot;).style.display = &quot;block&quot;;
+  }
+
+  async function cadastrar() {
+    const email = document.getElementById(&quot;email&quot;).value;
+    const senha = document.getElementById(&quot;senha&quot;).value;
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password: senha
+    });
+
+    if (error) {
+      alert(&quot;Erro no cadastro: &quot; + error.message);
+      return;
+    }
+
+    const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await supabase.from(&quot;users_profile&quot;).insert({
+      email: email,
+      code: codigo,
+      verified: false
+    });
+
+    alert(&quot;Conta criada com sucesso! Código: &quot; + codigo);
+  }
+
+  async function sair() {
+    await supabase.auth.signOut();
+    location.reload();
+  }
+
+  // Sessão persistente
+  supabase.auth.onAuthStateChange((event, session) =&gt; {
+    if (session) {
+      document.getElementById(&quot;loginBox&quot;).style.display = &quot;none&quot;;
+      document.getElementById(&quot;app&quot;).style.display = &quot;block&quot;;
+    }
+  });
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</body>
+</html>
